@@ -21,10 +21,10 @@ fun <R> RecordRepository<R>.rxDelete(user: R): Completable {
     return Completable.fromAction { this.delete(user) }
 }
 
-fun <R, Q> RecordRepository<R>.rxQuery(condition: RecordQueryCondition<Q>): Single<List<R>> {
-    return Single.fromCallable { this.query(condition) }
+fun <R> RecordRepository<R>.rxQuery(loader: QueryLoader<R>): Single<List<R>> {
+    return Single.fromCallable { this.query(loader) }
 }
 
-fun <R, Q> RecordRepository<R>.rxDeleteBy(condition: RecordQueryCondition<Q>): Completable {
-    return Completable.fromAction { this.deleteBy(condition) }
+fun <R> RecordRepository<R>.rxDeleteBy(processor: DeleteProcessor): Completable {
+    return Completable.fromAction { this.deleteBy(processor) }
 }

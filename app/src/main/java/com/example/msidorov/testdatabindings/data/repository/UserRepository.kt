@@ -3,7 +3,7 @@ package com.example.msidorov.testdatabindings.data.repository
 import com.example.msidorov.testdatabindings.data.database.AppDatabase
 import com.example.msidorov.testdatabindings.data.entity.UserEntity
 import com.example.msidorov.testdatabindings.domain.model.User
-import com.example.msidorov.testdatabindings.domain.repository.base.RecordQueryCondition
+import com.example.msidorov.testdatabindings.domain.repository.base.QueryLoader
 import com.example.msidorov.testdatabindings.domain.repository.base.RecordRepository
 
 /**
@@ -15,9 +15,13 @@ class UserRepository(val db: AppDatabase) : RecordRepository<User> {
         return UserEntity()
     }
 
-    override <Int> fun load(id: Int): User? {
-        return db.userDao().loadById(id);
-    }
+//    override fun<Int> load(id: Int): User? {
+//        return db.userDao().loadById(id)
+//    }
+
+//    override fun load(id: Int): User? {
+//        return db.userDao().loadById(id);
+//    }
 
     override fun update(record: User) {
         db.userDao().update(record as UserEntity)
@@ -27,20 +31,35 @@ class UserRepository(val db: AppDatabase) : RecordRepository<User> {
         db.userDao().delete(record as UserEntity)
     }
 
-    override fun <String> query(queryCondition: RecordQueryCondition<String>): List<User> {
-        db.query("select * from user where ${queryCondition.condition}")
+    // Загрузка всех пользователей
+    val allRecordsLoader = object : QueryLoader<User> {
+        override fun load(): List<User> {
+            return db.userDao().loadAll()
+        }
     }
 
-    override fun <Q> deleteBy(deleteCondition: RecordQueryCondition<Q>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    inner class LoaderByLogin(val login: String) : QueryLoader<User> {
+        override fun load(): List<User> {
+            db.query()
+            return listOf(db.userDao().loadByLogin(login))
+        }
     }
 
+    fun ds() = query(allRecordsLoader)
+
+    fun dd() = query(LoaderByLogin("dffd"))
+
+    fun dsa() {
+        (name, age) = getUser()
+    }
 
 }
 
 // Выборка по логину
-class LoginCondition(login: String) : RecordQueryCondition<String> {
-    override val condition: String = "login = \"$login\""
+class ByLoginLoader(val db: AppDatabase, val login: String) : QueryLoader<User> {
+    override fun load(): List<User> {
+        return listOf(db.userDao().loadByLogin(login))
+    }
 }
 
 // Выборка по имени пользователя (like)
