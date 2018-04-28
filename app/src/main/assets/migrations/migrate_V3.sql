@@ -1,0 +1,1 @@
+update users set login = login where id = -1000;
