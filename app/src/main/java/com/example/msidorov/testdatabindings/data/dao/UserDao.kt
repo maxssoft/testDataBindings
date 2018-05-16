@@ -18,8 +18,8 @@ import io.reactivex.Flowable
     @Query("select * from users where login = :login")
     fun loadByLogin(login: String): UserEntity
 
-    @Query("select * from users where user_name like :login")
-    fun loadByUserName(userName: String): UserEntity
+    @Query("select * from users where user_name like :userName")
+    fun loadByUserName(userName: String): List<UserEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(user: UserEntity)

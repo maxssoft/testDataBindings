@@ -1,18 +1,14 @@
 package com.example.msidorov.testdatabindings.data.database
 
-import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
-import android.arch.persistence.room.migration.Migration
 import android.content.Context
+
 import com.example.msidorov.testdatabindings.data.dao.UserContactDao
 import com.example.msidorov.testdatabindings.data.dao.UserDao
-import com.example.msidorov.testdatabindings.data.database.migrations.MigrationManager
-import com.example.msidorov.testdatabindings.data.database.utils.SqlScript
 import com.example.msidorov.testdatabindings.data.entity.UserContactEntity
 import com.example.msidorov.testdatabindings.data.entity.UserEntity
-import java.util.*
 
 /**
  * @author m.sidorov
@@ -31,22 +27,16 @@ abstract class AppDatabase : RoomDatabase() {
         @JvmStatic
         @Synchronized
         fun createInstance(context: Context) {
+
+            val migrations = MigrationManager.registerMigrations(context)
+
             instance = Room
                     .databaseBuilder(context.getApplicationContext(), AppDatabase::class.java, "local.db")
                     .allowMainThreadQueries()
-                    .addMigrations(*MigrationManager(context).migrations)
+                    .addMigrations(*migrations)
                     //.fallbackToDestructiveMigration()
                     .build()
         }
 
     }
 }
-
-fun SqlScript.execSQL(database: SupportSQLiteDatabase) {
-    for (sql in commands) {
-        if (!sql.isBlank()) {
-            database.execSQL(sql)
-        }
-    }
-}
-

@@ -1,6 +1,7 @@
 package com.example.msidorov.testdatabindings.utils
 
 import android.util.Log
+import ru.maxssoft.utils.extentions.isNull
 
 /**
  * @author m.sidorov

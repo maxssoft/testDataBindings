@@ -3,7 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/record.repository/record.repository.iml" filepath="$PROJECT_DIR$/record.repository/record.repository.iml" />
+      <module fileurl="file://$PROJECT_DIR$/room.migrations/room.migrations.iml" filepath="$PROJECT_DIR$/room.migrations/room.migrations.iml" />
       <module fileurl="file://$PROJECT_DIR$/testDataBindings.iml" filepath="$PROJECT_DIR$/testDataBindings.iml" />
+      <module fileurl="file://$PROJECT_DIR$/utils/utils.iml" filepath="$PROJECT_DIR$/utils/utils.iml" />
     </modules>
   </component>
 </project>

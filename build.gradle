@@ -3,7 +3,7 @@
 buildscript {
     ext {
         kotlin_version = '1.1.51'
-        //archRoomVersion = '1.0.0-alpha1'
+        rxjava_version =  '2.1.5'
         archLifecycleVersion = "1.0.0-alpha9-1"
         archRoomVersion = '1.0.0-alpha9-1'
     }

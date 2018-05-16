@@ -1,47 +1,34 @@
 package com.example.msidorov.testdatabindings.domain.repository
 
 import com.example.msidorov.testdatabindings.domain.model.User
-import com.example.msidorov.testdatabindings.domain.repository.base.EmptyCondition
-import com.example.msidorov.testdatabindings.domain.repository.base.RecordQueryCondition
-import com.example.msidorov.testdatabindings.domain.repository.base.RecordRepository
-import com.example.msidorov.testdatabindings.domain.repository.base.rxQuery
-import io.reactivex.Maybe
-import io.reactivex.Single
+import ru.maxsssoft.recordrepository.QueryLoader
+import ru.maxsssoft.recordrepository.RecordLoader
+import ru.maxsssoft.recordrepository.RecordRepository
 
 /**
- * Репозиторий для пользователей
- *
  * @author m.sidorov
+ *
+ * Репозиторий для пользователей
  */
 interface UserRepository : RecordRepository<User> {
 
-    override fun <Int> load(id: Int): User
+    val loaders: UserLoadersFabric
 
 }
 
-// Выборка по логину
-class LoginCondition(login: String) : RecordQueryCondition<String> {
-    override val condition: String = "login = \"$login\""
-}
+// Интерфейс фабрики, создающей загрузчиков для пользователей
+interface UserLoadersFabric {
 
-// Выборка по имени пользователя (like)
-class userNameLikeCondition(userName: String) : RecordQueryCondition<String> {
-    override val condition: String = "user_name like \"%$userName\"%"
-}
+    // Создает загрузчик по первичному ключу
+    fun byId(id: Int): RecordLoader<User>
 
-fun loadAll(): Single<List<User>> {
-    val userRepo: UserRepository
-    return userRepo
-            .rxQuery(EmptyCondition)
-}
+    // Создает загрузчик всех пользователей
+    fun allUsers(): QueryLoader<User>
 
-fun loadByLogin(login: String): Maybe<User>{
-    val userRepo: UserRepository
-    return userRepo
-            .rxQuery(LoginCondition(login))
-            .flatMapMaybe { list ->
-                val user = list.firstOrNull()
-                if (user != null) Maybe.just(user) else Maybe.empty()
-            }
-}
+    // Создает загрузчик по логину
+    fun byLogin(login: String): RecordLoader<User>
 
+    // Создает загрузчик по имени пользователя (поддержка Like)
+    fun byUserName(userName: String): QueryLoader<User>
+
+}
