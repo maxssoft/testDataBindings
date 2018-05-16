@@ -8,7 +8,7 @@ import ru.maxssoft.roommigrations.listener.MigrationListener
 /**
  * @author m.sidorov
  *
- * Абстрактный класс с реализацией кода, выполняющего обновление и фиксирующего его в логах
+ * Абстрактный класс с реализацией кода, выполняющего обновление
  */
 abstract class BaseMigration(startVersion: Int, endVersion: Int) : Migration(startVersion, endVersion) {
 

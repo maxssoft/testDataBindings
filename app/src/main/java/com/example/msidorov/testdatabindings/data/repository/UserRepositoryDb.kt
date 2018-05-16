@@ -3,7 +3,6 @@ package com.example.msidorov.testdatabindings.data.repository
 import com.example.msidorov.testdatabindings.data.database.AppDatabase
 import com.example.msidorov.testdatabindings.data.entity.UserEntity
 import com.example.msidorov.testdatabindings.domain.model.User
-import com.example.msidorov.testdatabindings.domain.repository.UserLoadersFabric
 import com.example.msidorov.testdatabindings.domain.repository.UserRepository
 
 import ru.maxsssoft.recordrepository.QueryLoader
@@ -30,7 +29,7 @@ class UserRepositoryDb(val db: AppDatabase) : UserRepository {
         db.userDao().delete(record as UserEntity)
     }
 
-    override val loaders: UserLoadersFabric = object : UserLoadersFabric {
+    override val loaders: UserRepository.LoadersProvider = object : UserRepository.LoadersProvider {
 
         override fun byId(id: Int) = object : RecordLoader<User> {
             override fun load(): User? {

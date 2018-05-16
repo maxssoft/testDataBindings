@@ -11,12 +11,12 @@ interface RecordRepository<R> {
     // создает экземпляр модели для новой записи
     fun newRecord(): R
 
-    // загружает записи из хранилища по условию выборки
+    // загружает записи из хранилища по условию выборки, заданным во внешнем загрузчике
     fun query(loader: QueryLoader<R>): List<R> {
         return loader.load()
     }
 
-    // загружает одну запись из хранилища по условию выборки
+    // загружает одну запись из хранилища по условию выборки, заданным во внешнем загрузчике
     fun query(loader: RecordLoader<R>): R? {
         return loader.load()
     }
@@ -27,7 +27,7 @@ interface RecordRepository<R> {
     // удаляет запись
     fun delete(record: R)
 
-    // удаляет записи по условию
+    // удаляет записи по логике, задаваемой во внешнем процессоре
     fun delete(processor: DeleteProcessor){
         processor.run()
     }

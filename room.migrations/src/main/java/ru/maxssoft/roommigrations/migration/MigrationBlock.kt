@@ -5,7 +5,7 @@ import android.arch.persistence.db.SupportSQLiteDatabase
 /**
  * @author m.sidorov
  *
- * Миграция, основанная на анонимном блоке
+ * Миграция, основанная на анонимном блоке кода
  */
 class MigrationBlock(startVersion: Int, endVersion: Int, private val block: (SupportSQLiteDatabase) -> Unit) : BaseMigration(startVersion, endVersion) {
 

@@ -13,7 +13,7 @@ import com.example.msidorov.testdatabindings.data.entity.UserEntity
 /**
  * @author m.sidorov
  */
-@Database(entities = arrayOf(UserEntity::class, UserContactEntity::class), version = MigrationManager.DATABE_VERSION)
+@Database(entities = arrayOf(UserEntity::class, UserContactEntity::class), version = MigrationManager.DATABASE_VERSION)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDao

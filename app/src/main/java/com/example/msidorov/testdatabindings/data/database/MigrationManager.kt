@@ -14,18 +14,20 @@ import ru.maxssoft.roommigrations.migration.MigrationScript
 object MigrationManager {
 
     // Текущая версия базы данных
-    const val DATABE_VERSION: Int = 7
+    const val DATABASE_VERSION: Int = 7
 
     // Регстрация всех миграций базы данных
     // Миграции должны добавляться строго последовательно
     fun registerMigrations(context: Context): Array<Migration> {
+
         return MigrationBuilder()
                 .add(MigrationScript(2, "update users set login = login where id = -1"))
                 .add(MigrationAssetsScript(3, context))
                 .add(MigrationScript(4, ""))
                 .add(MigrationAssetsScript(5, context))
-                .add(MigrationScript(5, 7, "/* test migrate over several versions */"))
+                .add(MigrationScript(5, 7, "/* test migration over several versions */"))
                 .build()
+
     }
 
 }

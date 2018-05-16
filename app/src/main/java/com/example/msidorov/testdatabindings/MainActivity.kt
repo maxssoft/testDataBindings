@@ -63,6 +63,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showError(message: String, error: Throwable? = null){
+        Log.e("testDatabase", "error: ${message.isNull("")}", error)
         Toast.makeText(this, "$message : ${error?.message.isNull("")}", Toast.LENGTH_LONG)
     }
 

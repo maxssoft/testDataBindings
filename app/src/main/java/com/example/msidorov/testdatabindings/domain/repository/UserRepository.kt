@@ -12,23 +12,23 @@ import ru.maxsssoft.recordrepository.RecordRepository
  */
 interface UserRepository : RecordRepository<User> {
 
-    val loaders: UserLoadersFabric
+    val loaders: LoadersProvider
 
-}
+    // Интерфейс провайдера, возвращающего загрузчики для пользователей
+    interface LoadersProvider {
 
-// Интерфейс фабрики, создающей загрузчиков для пользователей
-interface UserLoadersFabric {
+        // Создает загрузчик по первичному ключу
+        fun byId(id: Int): RecordLoader<User>
 
-    // Создает загрузчик по первичному ключу
-    fun byId(id: Int): RecordLoader<User>
+        // Создает загрузчик всех пользователей
+        fun allUsers(): QueryLoader<User>
 
-    // Создает загрузчик всех пользователей
-    fun allUsers(): QueryLoader<User>
+        // Создает загрузчик по логину
+        fun byLogin(login: String): RecordLoader<User>
 
-    // Создает загрузчик по логину
-    fun byLogin(login: String): RecordLoader<User>
+        // Создает загрузчик по имени пользователя (поддержка Like)
+        fun byUserName(userName: String): QueryLoader<User>
 
-    // Создает загрузчик по имени пользователя (поддержка Like)
-    fun byUserName(userName: String): QueryLoader<User>
+    }
 
 }

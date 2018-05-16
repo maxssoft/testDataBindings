@@ -20,6 +20,15 @@ class SqlScript() {
     // разделитель SQL команд
     var commandSeparator = SQL_COMMAND_SEPARATOR
 
+    // выполняет скрипт
+    fun execSql(database: SupportSQLiteDatabase) {
+        for (sql in commands) {
+            if (!sql.isBlank()) {
+                database.execSQL(sql)
+            }
+        }
+    }
+
     // Читает SQL команды из строки
     fun read(sql: String): SqlScript {
         commands.addAll(parse(sql))
@@ -47,14 +56,6 @@ class SqlScript() {
             return script.split("\\s*$commandSeparator\\s*")
         } else {
             return emptyList()
-        }
-    }
-
-    fun execSql(database: SupportSQLiteDatabase) {
-        for (sql in commands) {
-            if (!sql.isBlank()) {
-                database.execSQL(sql)
-            }
         }
     }
 
