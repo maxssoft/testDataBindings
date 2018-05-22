@@ -1,9 +1,11 @@
-package com.example.msidorov.testdatabindings
+package com.example.msidorov.testdatabindings.ui.activity.main
 
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.widget.Toast
+import com.example.msidorov.testdatabindings.App
+import com.example.msidorov.testdatabindings.R
 
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -12,24 +14,44 @@ import pl.com.salsoft.sqlitestudioremote.SQLiteStudioService
 import ru.maxssoft.utils.extentions.isNull
 import ru.maxsssoft.recordrepository.rxQuery
 import ru.maxsssoft.recordrepository.rxUpdate
+import com.example.msidorov.testdatabindings.databinding.ActivityMainBinding
+import com.example.msidorov.testdatabindings.events.ErrorEvent
+import com.example.msidorov.testdatabindings.ui.navigation.Navigator
+import com.example.msidorov.testdatabindings.utils.UserException
+import io.reactivex.disposables.CompositeDisposable
 
 /**
  * @author m.sidorov
  */
-class MainActivity : AppCompatActivity() {
+    class MainActivity : AppCompatActivity() {
+
+    lateinit var binding: ActivityMainBinding
+    lateinit var vm: VM_MainActivity
+
+    private var disposables = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        //setContentView(R.layout.activity_main)
+        vm = VM_MainActivity(this)
+        binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main);
+        binding.setVM(vm)
     }
 
     override fun onStart() {
         super.onStart()
+        vm.onStart()
 
         testDatabase()
-
         // SQLiteStudioService.instance().setPort(9999);
         SQLiteStudioService.instance().start(this)
+    }
+
+    override fun onStop() {
+        SQLiteStudioService.instance().stop()
+
+        vm.onStop()
+        super.onStop()
     }
 
     private fun testDatabase() {
@@ -46,7 +68,7 @@ class MainActivity : AppCompatActivity() {
         }
         userRepository.rxUpdate(newUser)
                 .subscribeOn(Schedulers.io())
-                .subscribe({ Log.e("testDatabase", "insert record complete") }, { showError("error of insert record", it) })
+                .subscribe({ Log.e("testDatabase", "insert record complete") }, { ErrorEvent.post(UserException("error of insert record", it)) })
 
         userRepository.rxQuery(userRepository.loaders.byUserName("user%"))
                 .flatMapCompletable {
@@ -59,27 +81,9 @@ class MainActivity : AppCompatActivity() {
                 }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ Log.e("testDatabase", "update record complete") }, { showError("error of update record", it) })
-    }
+                .subscribe({ Log.e("testDatabase", "update record complete") }, { ErrorEvent.post(UserException("error of update record", it)) })
 
-    private fun showError(message: String, error: Throwable? = null){
-        Log.e("testDatabase", "error: ${message.isNull("")}", error)
-        Toast.makeText(this, "$message : ${error?.message.isNull("")}", Toast.LENGTH_LONG)
-    }
-
-    override fun onStop() {
-        SQLiteStudioService.instance().stop()
-
-        super.onStop()
-    }
-
-
-
-    companion object {
-
-        internal fun f() {
-            val s: String? = null
-        }
+        Navigator.openUserCard(1)
     }
 
 }

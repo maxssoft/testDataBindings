@@ -13,22 +13,23 @@ import ru.maxssoft.roommigrations.listener.MigrationListener
 abstract class BaseMigration(startVersion: Int, endVersion: Int) : Migration(startVersion, endVersion) {
 
     val version: Int
+
     init {
         version = endVersion
     }
 
-    lateinit var listener: MigrationListener
+    var listener: MigrationListener? = null
 
     // Выполняет миграцию базы данных и фиксирует ее в логах
     final override fun migrate(database: SupportSQLiteDatabase) {
-        listener.onStart(startVersion, endVersion)
+        listener?.onStart(startVersion, endVersion)
         try {
 
             doMigrate(database)
 
-            listener.onSuccess(startVersion, endVersion)
+            listener?.onSuccess(startVersion, endVersion)
         } catch (e: Exception) {
-            listener.onError(startVersion, endVersion, e)
+            listener?.onError(startVersion, endVersion, e)
             throw DatabaseMigrationError("Error of migrate database to $endVersion version", e)
         }
     }
